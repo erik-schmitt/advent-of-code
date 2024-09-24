@@ -17,7 +17,7 @@ sub getFile {
     
     open(my $fh, '<', $self->filename) or die("Could not open '$self->filename' - $!");
     while (my $line = <$fh>) {
-        $line =~ s/\s+$//;
+        chomp $line;
         push @contents, $line;
     }
     close $fh;
