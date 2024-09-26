@@ -10,16 +10,17 @@ my @inputData = $fileReader->getFile();
 
 sub run {
     my @buffer = split('', $inputData[0]);
-    my @lastFour;
+    my @potentialMarker;
+    my $markerSize = 4;
     my $characterCount = 0;
     while (@buffer) {
         my $newCharacter = shift @buffer;
-        if (@lastFour > 3) {
-            shift @lastFour;
+        if (@potentialMarker >= $markerSize) {
+            shift @potentialMarker;
         }
-        push @lastFour, $newCharacter;
+        push @potentialMarker, $newCharacter;
         $characterCount++;
-        if (scalar @lastFour == 4 && isUnique(@lastFour)) {
+        if (scalar @potentialMarker == $markerSize && isUnique(@potentialMarker)) {
             last;
         }
     }
