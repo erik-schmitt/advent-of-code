@@ -6,7 +6,7 @@ use FileReader;
 
 my $fileReader = FileReader->new(filename => './Level1/InputDataLevel1.txt');
 my @inputData = $fileReader->getFile();
-
+my $totalSize = 0;
 
 sub run {
     my %fileSystem;
@@ -40,7 +40,6 @@ sub run {
             $action = 'Change directory\n';
         }
         elsif ($line =~ /^\$ ls/) {
-            print "$line\n";
             $action = 'Request listing\n';
         }
         elsif ($line =~ /^(\d+)\s(.+)/) {
@@ -68,10 +67,33 @@ sub run {
         else {
             die("Uknown file command: $line\n");
         }
-        say "Line: $line ### Action: $action";
     }
     print "File system parsed\n";
+    calculateDirectorySizes(\%fileSystem);
+    print "Directory sizes calculated\n";
+    print "Total size is: $totalSize\n";
 }
 
+sub calculateDirectorySizes {
+    my $hashRef = shift;
+    my @objects = keys %{$hashRef};
+    foreach my $object (@objects) {
+        next if $object eq 'type';
+        # print "Checking $object\n";
+        if ($hashRef->{$object}{'type'} eq 'dir') {
+            my $dirRef = \%{$hashRef->{$object}};
+            calculateDirectorySizes($dirRef);
+            $hashRef->{'size'} += $hashRef->{$object}{'size'};
+
+            if ( $hashRef->{$object}{'size'} <= 100000) {
+                $totalSize += $hashRef->{$object}{'size'};
+            }
+        }
+        elsif ($hashRef->{$object}{'type'} eq 'file') {
+            $hashRef->{'size'} += $hashRef->{$object}{'size'};
+        }
+
+    }
+}
 
 run();
