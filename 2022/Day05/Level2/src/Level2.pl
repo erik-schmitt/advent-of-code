@@ -49,7 +49,6 @@ sub readStartingConfiguration {
     my $numberOfStacks = scalar keys %{$stacks};
     while (@{$startingConfiguration}) {
         my $line = pop @{$startingConfiguration};
-        $line .= ' '; # So substrings don't go outside string
         for (my $i = 0; $i < $numberOfStacks; $i++) {
             my $container = substr($line, $i*4, 3);
             push @{$stacks->{$i+1}}, $container if $container =~ /\w/;
