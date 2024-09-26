@@ -12,9 +12,14 @@ sub run {
     my %stacks;
     my @startingConfiguration;
     foreach my $line (@inputData) {
-        if ($line =~ /^move/) {
-            say %stacks;
-            exit;
+        if ($line =~ /^move (\d+) from (\d+) to (\d+)/) {
+            my $quantity = $1;
+            my $source = $2;
+            my $destination = $3;
+            for (my $i = 0; $i < $quantity; $i++) {
+                my $container = pop @{$stacks{$source}};
+                push @{$stacks{$destination}}, $container;
+            }
         }
         elsif ($line eq '')
         {
@@ -25,29 +30,30 @@ sub run {
         }
     }
 
-    my $topElements;
-    foreach my $stack (sort keys %stacks) {
-        $topElements .= pop @{$stacks{$stack}};
+    my $topElements = '';
+    foreach my $stackNumber (sort {$a <=> $b} keys %stacks) {
+        $topElements .= pop @{$stacks{$stackNumber}};
     }
+    $topElements =~ s/\[//g;
+    $topElements =~ s/\]//g;
     say $topElements, "\n";
 }
 
 sub readStartingConfiguration {
-    my ($stacks_ref, $start_ref) = @_;
-    
+    my ($stacks, $startingConfiguration) = @_;
+
     # Read stack labels
-    my $line = pop @{$start_ref};
-    %{$stacks_ref} = map {$_ => []} split(' ', $line);
+    my $line = pop @{$startingConfiguration};
+    %{$stacks} = map {$_ => []} split(' ', $line);
 
     # Read containers
-    my $numberOfStacks = scalar keys %{$stacks_ref};
-    while (@{$start_ref}) {
-        my $line = pop @{$start_ref};
+    my $numberOfStacks = scalar keys %{$stacks};
+    while (@{$startingConfiguration}) {
+        my $line = pop @{$startingConfiguration};
         $line .= ' '; # So substrings don't go outside string
-        for (my $i = 0; $i < length($line); $i+3) {
-            my $container = substr($line, $i, 4);
-            push @{$stacks_ref->{$i+1}}, $container;
-            # $line = substr($line, $i+3);            
+        for (my $i = 0; $i < $numberOfStacks; $i++) {
+            my $container = substr($line, $i*4, 3);
+            push @{$stacks->{$i+1}}, $container if $container =~ /\w/;
         }
     }
 }
