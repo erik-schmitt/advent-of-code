@@ -9,24 +9,28 @@ my @inputData = $fileReader->getFile();
 
 
 sub run {
-    my $maxCalories = -1;
-    my $currentCalories = 0;
+    my @left;
+    my @right;
+    my $sumOfDifferences = 0;
+
     foreach my $line (@inputData) {
-        if ( $line =~ /^(\d+)$/ ) {
-            $currentCalories += $1;
-        }
-        else {
-            if ($currentCalories > $maxCalories ) {
-                $maxCalories = $currentCalories;
-            }
-            $currentCalories = 0;
+        if ( $line =~ /^(\d+)\s+(\d+)$/ ) {
+            push @left, $1;
+            push @right, $2;
         }
     }
 
-    if ($currentCalories > $maxCalories ) {
-        $maxCalories = $currentCalories;
+    @left = sort {$a <=> $b} @left;
+    @right = sort {$a <=> $b} @right;
+
+    while (@left) {
+        my $left = shift @left;
+        my $right = shift @right;
+        my $difference = abs($left - $right);
+        $sumOfDifferences += $difference;
     }
-    say "Max Calories: $maxCalories";
+
+    say $sumOfDifferences;
 }
 
 run();

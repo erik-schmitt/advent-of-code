@@ -9,23 +9,24 @@ my @inputData = $fileReader->getFile();
 
 
 sub run {
-    my @calorieListing;
-    my $currentCalories = 0;
+    my @left;
+    my %right;
+    my $similarityScore = 0;
+
     foreach my $line (@inputData) {
-        if ( $line =~ /^(\d+)$/ ) {
-            $currentCalories += $1;
-        }
-        else {
-            push @calorieListing, $currentCalories;
-            $currentCalories = 0;
+        if ( $line =~ /^(\d+)\s+(\d+)$/ ) {
+            push @left, $1;
+            $right{$2}++;
         }
     }
 
-    push @calorieListing, $currentCalories;
+    foreach my $value (sort {$a <=> $b} @left) {
+        if (exists $right{$value}) {
+            $similarityScore += $value * $right{$value};
+        }
+    }
 
-    my @sortedCalorieListing = sort {$a <=> $b} @calorieListing;
-    my $maxCalories = $sortedCalorieListing[-1] + $sortedCalorieListing[-2] + $sortedCalorieListing[-3];
-    say "Max Calories: $maxCalories";
+    say $similarityScore;
 }
 
 run();
