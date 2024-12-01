@@ -10,13 +10,22 @@ my @inputData = $fileReader->getFile();
 
 my $rowNumber = 10;
 # my $rowNumber = 2000000;
-my %row;
+my $min = 0;
+my $max = 20;
+my %rows;
 
 sub run {
     parseInput();
-    say getRowCount();
+    for (my $m = $min; $m <= $max; $m++) {
+        for (my $n = $min; $n <= $max; $n++) {
+            if (!exists $rows{"$n,$m"}) {
+                say $n * 4000000 + $m;
+                last;
+            }
+        }
+    }
 }
-
+=begin
 sub getRowCount {
     my $count = 0;
     foreach my $key (sort {$a <=> $b} keys %row) {
@@ -24,11 +33,16 @@ sub getRowCount {
     }
     return $count;
 }
+=cut
 
 sub findManhattanDistance {
     my ($x1, $y1, $x2, $y2) = @_;
     my $distance = abs($x1- $x2) + abs($y1 - $y2);
     return $distance;
+}
+
+sub markRow {
+    
 }
 
 sub parseInput {
