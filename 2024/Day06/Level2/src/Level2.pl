@@ -23,7 +23,7 @@ my %nextDirection = (
 );
 
 # check all positions that the guard visited in Level 1 heading in same direction
-
+# Optimizatin idea: You can store position and direction in a set (or dictionary, whatever) and if a position and direction repeats, you're in a loop.
 sub run {
     readLabMap();
     tryObstacle();
