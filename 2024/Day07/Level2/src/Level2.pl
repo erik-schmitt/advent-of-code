@@ -36,6 +36,7 @@ sub equationIsTrue {
         my @currentOperations = split(//, $currentOperationList);
         my @currentOperands = @operands;
         my $actualResult = shift @currentOperands;
+        my $notBigEnough = 1;
         do {
             my $operand = shift @currentOperands;
             if (@currentOperations) {
@@ -57,8 +58,10 @@ sub equationIsTrue {
             else {
                 die "Operation missing";
             }
+            # Since the actual result can only increase, we can exit the test early if the result is too large
+            $notBigEnough = 0 if $actualResult > $expectedResult;
         }
-        while (@currentOperands);
+        while (@currentOperands && $notBigEnough);
         $isTrue = 1 if $actualResult == $expectedResult;
     }
     return $isTrue;
