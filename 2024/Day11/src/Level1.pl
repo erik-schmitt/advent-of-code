@@ -5,12 +5,12 @@ use lib 'c:/users/eriks/Documents/Code/advent-of-code/2024/utils/';
 use FileReader;
 use Data::Dumper;
 
-my $fileReader = FileReader->new(filename => './Level2/InputDataLevel2.txt');
+my $fileReader = FileReader->new(filename => './InputData.txt');
 my @inputData = $fileReader->getFile();
 
 my %stoneProperties;
 
-use constant BLINKS => 75;
+use constant BLINKS => 25;
 
 sub run {
     parseInput();
